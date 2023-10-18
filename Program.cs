@@ -1,4 +1,5 @@
 using IbgeApi.Data;
+using IbgeApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -59,6 +60,14 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseRouting();
+
 app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    User.MapEndpoints(endpoints);
+    Ibge.MapEndpoints(endpoints);
+});
 
 app.Run();
