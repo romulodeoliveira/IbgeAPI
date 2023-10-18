@@ -1,3 +1,6 @@
+using IbgeApi.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+string dbConfig = "Data Source=NomeDoBancoDeDados.db;";
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(dbConfig));
 
 var app = builder.Build();
 
