@@ -1,9 +1,12 @@
 namespace IbgeApi.Models;
 
-class User
+public class User
 {
-    public int Id { get; set; }
-    public string State { get; set; } = null!;
-    public string City { get; set; } = null!;
+    public Guid Id { get; set; } = new Guid();
+    public string? Firstname { get; set; }
+    public string? Lastname { get; set; }
+    public string Email { get; set; }
+    public byte[] PasswordHash { get; set; }
+    public byte[] PasswordSalt { get; set; }
 }
 
