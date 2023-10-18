@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-string dbConfig = "Data Source=NomeDoBancoDeDados.db;";
+string dbConfig = "Data Source=data.db;";
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(dbConfig));
 
 var app = builder.Build();
