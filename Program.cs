@@ -1,8 +1,11 @@
 using IbgeApi.Data;
-using IbgeApi.Endpoints;
+using IbgeApi.Data.Repositories.Implementations;
+using IbgeApi.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore;
+using Microsoft.AspNetCore.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,17 +47,16 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
+builder.Services.AddScoped<IIbgeRepository, IbgeRepository>();
+
 string dbConfig = "Data Source=data.db;";
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(dbConfig));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
@@ -64,10 +66,33 @@ app.UseRouting();
 
 app.MapControllers();
 
-app.UseEndpoints(endpoints =>
+#region IBGE
+
+app.MapGet("/api/ibge", () => "IBGE");
+
+app.MapGet("/api/ibge/id/{id}", (int id, IIbgeRepository ibgeRepository) =>
 {
-    User.MapEndpoints(endpoints);
-    Ibge.MapEndpoints(endpoints);
+    try
+    {
+        var response = ibgeRepository.GetIbgeById(id);
+
+        if (!response.Success)
+        {
+            return Results.NotFound(response.Message);
+        }
+
+        return Results.Ok(response.Item3);
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
 });
+#endregion
+
+#region User
+app.MapGet("/api/user", () => "User");
+#endregion
 
 app.Run();
