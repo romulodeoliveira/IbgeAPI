@@ -11,7 +11,7 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         _dataContext = dataContext;
     }
     
-    public (bool Success, string Message, Ibge) GetIbgeById(int id)
+    public (bool Success, string Message, Models.Ibge) GetIbgeById(int id)
     {
         try
         {
@@ -22,13 +22,13 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
                 return (
                     false,
                     "Dados IBGE não encontrados.", 
-                    new Ibge());
+                    new Models.Ibge());
             }
 
             return (
                 true, 
                 "",
-                new Ibge()
+                new Models.Ibge()
                 {
                     Id = response.Id,
                     City = response.City,
@@ -41,18 +41,49 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
             return (
                 false, 
                 $"Erro interno do servidor: {error.Message}",
-                new Ibge());
+                new Models.Ibge());
         }
     }
 
-    public List<Ibge> GetAllIbge()
+    public List<Models.Ibge> GetAllIbge()
     {
         return _dataContext.Ibges.ToList();
     }
 
-    public (bool Success, string Message) AddIbge(DTO.Ibge ibgeDto)
+    public (bool Success, string Message) AddIbge(DTO.Ibge request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var model = new Models.Ibge();
+            
+            if (!string.IsNullOrEmpty(request.State))
+            {
+                model.State = request.State;
+            }
+            else
+            {
+                return (false, "Estado não pode estar em branco");
+            }
+            
+            if (!string.IsNullOrEmpty(request.City))
+            {
+                model.City = request.City;
+            }
+            else
+            {
+                return (false, "Cidade não pode estar em branco");
+            }
+
+            _dataContext.Ibges.Add(model);
+            _dataContext.SaveChanges();
+
+            return (true, "Dados cadastrados.");
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine($"Erro interno do servidor: {error.Message}");
+            return (false, $"Erro interno do servidor: {error.Message}");
+        }
     }
 
     public (bool Success, string Message) UpdateIbge(DTO.Ibge ibgeDto)

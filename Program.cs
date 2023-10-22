@@ -1,3 +1,4 @@
+using System.Text.Json;
 using IbgeApi.Data;
 using IbgeApi.Data.Repositories.Implementations;
 using IbgeApi.Data.Repositories.Interfaces;
@@ -96,6 +97,27 @@ app.MapGet("/api/ibge/list-ibge", (IIbgeRepository ibgeRepository) =>
     {
         var response = ibgeRepository.GetAllIbge();
         return Results.Ok(response);
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
+
+app.MapPost("/api/ibge/add-ibge", (IbgeApi.Data.DTO.Ibge request, IIbgeRepository ibgeRepository) =>
+{
+    try
+    {
+        var response = ibgeRepository.AddIbge(request);
+        if (response.Success)
+        {
+            return Results.Ok(response.Message);
+        }
+        else
+        {
+            return Results.BadRequest(response.Message);
+        }
     }
     catch (Exception error)
     {
