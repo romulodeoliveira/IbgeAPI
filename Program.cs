@@ -68,7 +68,6 @@ app.UseRouting();
 app.MapControllers();
 
 #region IBGE
-
 app.MapGet("/api/ibge", () => "IBGE");
 
 app.MapGet("/api/ibge/id/{id}", (int id, IIbgeRepository ibgeRepository) =>
@@ -171,6 +170,36 @@ app.MapDelete("/api/ibge/delete-ibge/id/{ibgeId}", (int ibgeId, IIbgeRepository 
 
 #region User
 app.MapGet("/api/user", () => "User");
+
+app.MapGet("/api/user/id/{userId}", (Guid userId, IUserRepository userRepository) =>
+{
+    try
+    {
+        var response = userRepository.GetUserById(userId);
+
+        if (!response.Success)
+        {
+            return Results.NotFound(response.Message);
+        }
+
+        return Results.Ok(response.Item3);
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
+
+app.MapGet("/api/user/list-users", () => "Olá, Mundo");
+
+app.MapPost("/api/user/register", () => "Olá, Mundo");
+
+app.MapPost("/api/user/login", () => "Olá, Mundo");
+
+app.MapPut("/api/user/update", () => "Olá, Mundo");
+
+app.MapDelete("/api/user/delete", () => "Olá, Mundo");
 #endregion
 
 app.Run();
