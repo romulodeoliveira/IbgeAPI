@@ -14,12 +14,12 @@ public class UserRepository : IbgeApi.Data.Repositories.Interfaces.IUserReposito
         throw new NotImplementedException();
     }
 
-    public (bool Success, string Message) AddUser(DTO.User userDto)
+    public (bool Success, string Message) AddUser(DTO.User.Create createDto)
     {
         throw new NotImplementedException();
     }
 
-    public (bool Success, string Message) UpdateUser(DTO.User userDto)
+    public (bool Success, string Message) UpdateUser(DTO.User.Create createDto)
     {
         throw new NotImplementedException();
     }

@@ -105,11 +105,32 @@ app.MapGet("/api/ibge/list-ibge", (IIbgeRepository ibgeRepository) =>
     }
 });
 
-app.MapPost("/api/ibge/add-ibge", (IbgeApi.Data.DTO.Ibge request, IIbgeRepository ibgeRepository) =>
+app.MapPost("/api/ibge/add-ibge", (IbgeApi.Data.DTO.IBGE.Create request, IIbgeRepository ibgeRepository) =>
 {
     try
     {
         var response = ibgeRepository.AddIbge(request);
+        if (response.Success)
+        {
+            return Results.Ok(response.Message);
+        }
+        else
+        {
+            return Results.BadRequest(response.Message);
+        }
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
+
+app.MapPut("/api/ibge/update-ibge", (IbgeApi.Data.DTO.IBGE.Update request, IIbgeRepository ibgeRepository) =>
+{
+    try
+    {
+        var response = ibgeRepository.UpdateIbge(request);
         if (response.Success)
         {
             return Results.Ok(response.Message);

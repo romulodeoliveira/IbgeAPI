@@ -50,7 +50,7 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         return _dataContext.Ibges.ToList();
     }
 
-    public (bool Success, string Message) AddIbge(DTO.Ibge request)
+    public (bool Success, string Message) AddIbge(DTO.IBGE.Create request)
     {
         try
         {
@@ -86,9 +86,36 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         }
     }
 
-    public (bool Success, string Message) UpdateIbge(DTO.Ibge ibgeDto)
+    public (bool Success, string Message) UpdateIbge(DTO.IBGE.Update request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var local = _dataContext.Ibges.FirstOrDefault(ibge => ibge.Id == request.Id);
+
+            if (local == null)
+            {
+                return (false, "Objeto não encontrado com o ID fornecido.");
+            }
+            
+            if (!string.IsNullOrEmpty(request.City))
+            {
+                local.City = request.City;
+            }
+            
+            if (!string.IsNullOrEmpty(request.State))
+            {
+                local.State = request.State;
+            }
+
+            _dataContext.SaveChanges();
+            
+            return (true, "Dados atualizados.");
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine($"Erro interno do servidor: {error.Message}");
+            return (false, $"Erro interno do servidor: {error.Message}");
+        }
     }
 
     public (bool Success, string Message) DeleteIbge(Guid ibgeId)

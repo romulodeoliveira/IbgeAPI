@@ -1,6 +1,6 @@
-namespace IbgeApi.Data.DTO;
+namespace IbgeApi.Data.DTO.User;
 
-public class User
+public class Create
 {
     public string? Firstname { get; set; }
     public string? Lastname { get; set; }
