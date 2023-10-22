@@ -45,7 +45,7 @@ public class UserRepository : IbgeApi.Data.Repositories.Interfaces.IUserReposito
 
     public List<User> GetAllUsers()
     {
-        throw new NotImplementedException();
+        return _dataContext.Users.ToList();
     }
 
     public (bool Success, string Message) AddUser(DTO.User.Create createDto)

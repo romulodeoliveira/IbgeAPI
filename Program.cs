@@ -191,7 +191,19 @@ app.MapGet("/api/user/id/{userId}", (Guid userId, IUserRepository userRepository
     }
 });
 
-app.MapGet("/api/user/list-users", () => "Olá, Mundo");
+app.MapGet("/api/user/list-users", (IUserRepository userRepository) =>
+{
+    try
+    {
+        var response = userRepository.GetAllUsers();
+        return Results.Ok(response);
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
 
 app.MapPost("/api/user/register", () => "Olá, Mundo");
 
