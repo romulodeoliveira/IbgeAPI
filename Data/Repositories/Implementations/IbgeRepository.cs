@@ -50,7 +50,7 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         return _dataContext.Ibges.ToList();
     }
 
-    public (bool Success, string Message) AddIbge(DTO.IBGE.Create request)
+    public (bool Success, string Message) AddIbge(DTO.IBGE.CreateIbge request)
     {
         try
         {

@@ -2,6 +2,7 @@ using System.Text.Json;
 using IbgeApi.Data;
 using IbgeApi.Data.Repositories.Implementations;
 using IbgeApi.Data.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -49,6 +50,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddScoped<IIbgeRepository, IbgeRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 string dbConfig = "Data Source=data.db;";
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(dbConfig));
@@ -104,7 +106,7 @@ app.MapGet("/api/ibge/list-ibge", (IIbgeRepository ibgeRepository) =>
     }
 });
 
-app.MapPost("/api/ibge/add-ibge", (IbgeApi.Data.DTO.IBGE.Create request, IIbgeRepository ibgeRepository) =>
+app.MapPost("/api/ibge/add-ibge", (IbgeApi.Data.DTO.IBGE.CreateIbge request, IIbgeRepository ibgeRepository) =>
 {
     try
     {
@@ -169,8 +171,6 @@ app.MapDelete("/api/ibge/delete-ibge/id/{ibgeId}", (int ibgeId, IIbgeRepository 
 #endregion
 
 #region User
-app.MapGet("/api/user", () => "User");
-
 app.MapGet("/api/user/id/{userId}", (Guid userId, IUserRepository userRepository) =>
 {
     try
@@ -205,13 +205,34 @@ app.MapGet("/api/user/list-users", (IUserRepository userRepository) =>
     }
 });
 
-app.MapPost("/api/user/register", () => "Olá, Mundo");
+app.MapPost("/api/user/register", (IbgeApi.Data.DTO.User.CreateUser request, IUserRepository userRepository) =>
+{
+    try
+    {
+        var response = userRepository.RegisterUser(request);
+        if (response.Success)
+        {
+            return Results.Ok(response.Message);
+        }
+        else
+        {
+            return Results.BadRequest(response.Message);
+        }
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
 
+/*
 app.MapPost("/api/user/login", () => "Olá, Mundo");
 
 app.MapPut("/api/user/update", () => "Olá, Mundo");
 
 app.MapDelete("/api/user/delete", () => "Olá, Mundo");
+*/
 #endregion
 
 app.Run();
