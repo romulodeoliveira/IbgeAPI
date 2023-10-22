@@ -118,8 +118,26 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         }
     }
 
-    public (bool Success, string Message) DeleteIbge(Guid ibgeId)
+    public (bool Success, string Message) DeleteIbge(int ibgeId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var local = _dataContext.Ibges.FirstOrDefault(ibge => ibge.Id == ibgeId);
+            
+            if (local == null)
+            {
+                return (false, "Objeto não encontrado com o ID fornecido.");
+            }
+
+            _dataContext.Ibges.Remove(local);
+            _dataContext.SaveChanges();
+
+            return (true, "Objeto excluído com sucesso.");
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine($"Erro interno do servidor: {error.Message}");
+            return (false, $"Erro interno do servidor: {error.Message}");
+        }
     }
 }

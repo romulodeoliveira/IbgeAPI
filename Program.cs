@@ -146,6 +146,27 @@ app.MapPut("/api/ibge/update-ibge", (IbgeApi.Data.DTO.IBGE.Update request, IIbge
         return Results.StatusCode(500);
     }
 });
+
+app.MapDelete("/api/ibge/delete-ibge/id/{ibgeId}", (int ibgeId, IIbgeRepository ibgeRepository) =>
+{
+    try
+    {
+        var response = ibgeRepository.DeleteIbge(ibgeId);
+        if (response.Success)
+        {
+            return Results.Ok(response.Message);
+        }
+        else
+        {
+            return Results.BadRequest(response.Message);
+        }
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
 #endregion
 
 #region User

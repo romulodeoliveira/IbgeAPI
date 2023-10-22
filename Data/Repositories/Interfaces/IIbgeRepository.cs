@@ -6,5 +6,5 @@ public interface IIbgeRepository
     List<IbgeApi.Models.Ibge> GetAllIbge();
     (bool Success, string Message) AddIbge(IbgeApi.Data.DTO.IBGE.Create createDto);
     (bool Success, string Message) UpdateIbge(IbgeApi.Data.DTO.IBGE.Update createDto);
-    (bool Success, string Message) DeleteIbge(Guid ibgeId);
+    (bool Success, string Message) DeleteIbge(int ibgeId);
 }
