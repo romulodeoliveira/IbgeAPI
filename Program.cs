@@ -89,6 +89,20 @@ app.MapGet("/api/ibge/id/{id}", (int id, IIbgeRepository ibgeRepository) =>
         return Results.StatusCode(500);
     }
 });
+
+app.MapGet("/api/ibge/list-ibge", (IIbgeRepository ibgeRepository) =>
+{
+    try
+    {
+        var response = ibgeRepository.GetAllIbge();
+        return Results.Ok(response);
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Erro interno do servidor: {error.Message}");
+        return Results.StatusCode(500);
+    }
+});
 #endregion
 
 #region User

@@ -45,9 +45,9 @@ public class IbgeRepository : IbgeApi.Data.Repositories.Interfaces.IIbgeReposito
         }
     }
 
-    public List<User> GetAllIbge()
+    public List<Ibge> GetAllIbge()
     {
-        throw new NotImplementedException();
+        return _dataContext.Ibges.ToList();
     }
 
     public (bool Success, string Message) AddIbge(DTO.Ibge ibgeDto)

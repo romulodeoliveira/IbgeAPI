@@ -1,5 +1,7 @@
 # Migrations
 Migrations/
+data.db-shm
+data.db-wal
 
 # Visual Studio Code
 .vscode/
